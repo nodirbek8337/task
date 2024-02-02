@@ -27,18 +27,21 @@
       </tr>
       <tr>
         <th style="width: 10%">
-          <button (click)="toggleSortOrder()">
-            <span>Id</span
+          <button (click)="toggleSortOrder('id')">
+            <span>ID</span
             ><i
               class="fa-solid fa-chevron-right myIcon myIdIcon"
-              [style.transform]="getRotationAngle()"
+              [style.transform]="getRotationAngle('id')"
             ></i>
           </button>
         </th>
         <th style="width: 24%">
-          <button>
+          <button (click)="toggleSortOrder('title')">
             <span>Title</span
-            ><i class="fa-solid fa-chevron-right myIcon myTitleIcon"></i>
+            ><i
+              class="fa-solid fa-chevron-right myIcon myTitleIcon"
+              [style.transform]="getRotationAngle('title')"
+            ></i>
           </button>
         </th>
         <th style="width: 26%">Tags</th>

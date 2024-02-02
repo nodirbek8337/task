@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
-import { of } from 'rxjs';
-import { Observable } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
+import { of, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +9,6 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  value: string = 'hello';
-
   difficultyColors: any = [
     'success',
     'success',
@@ -24,34 +20,35 @@ export class AppComponent {
   ];
 
   titleFilter: string = '';
-  sortOrder: string = '';
-
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
-
+  sortOrderId: string = '';
+  sortOrderTitle: string = '';
   public data$: Observable<any> | undefined;
   totalData = 0;
   pageNumber = 1;
+
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadProblems({ first: 0, rows: 10 });
   }
 
   loadProblems(event: LazyLoadEvent) {
-    event.first == 0
-      ? (this.pageNumber = 1)
-      : (this.pageNumber = (event.first ?? 81) / (event.rows ?? 81) + 1);
-
+    this.pageNumber =
+      event.first === 0 ? 1 : (event.first ?? 81) / (event.rows ?? 81) + 1;
     let ordering = '';
 
-    if (this.sortOrder === 'asc') {
+    if (this.sortOrderId === 'asc') {
       ordering = 'id';
-    } else if (this.sortOrder === 'desc') {
+    } else if (this.sortOrderId === 'desc') {
       ordering = '-id';
+    } else if (this.sortOrderTitle === 'asc') {
+      ordering = 'title';
+    } else if (this.sortOrderTitle === 'desc') {
+      ordering = '-title';
     }
 
     if (this.titleFilter) {
       const lowercaseTitle = this.titleFilter.toLowerCase();
-
       this.getData(
         this.pageNumber,
         event.rows ?? 81,
@@ -60,7 +57,6 @@ export class AppComponent {
       ).subscribe((response: any) => {
         this.totalData = response.total;
         this.data$ = of(response.data);
-
         this.cdr.detectChanges();
       });
     } else {
@@ -72,14 +68,13 @@ export class AppComponent {
       ).subscribe((response: any) => {
         this.totalData = response.total;
         this.data$ = of(response.data);
-
         this.cdr.detectChanges();
       });
     }
   }
 
   getData(page: number, page_size: number, title?: string, ordering?: string) {
-    let params: any = {
+    const params: any = {
       page: page.toString(),
       page_size: page_size.toString(),
     };
@@ -92,9 +87,7 @@ export class AppComponent {
       params.ordering = ordering;
     }
 
-    return this.http.get('https://kep.uz/api/problems', {
-      params: params,
-    });
+    return this.http.get('https://kep.uz/api/problems', { params: params });
   }
 
   titleSearch(event: Event) {
@@ -103,13 +96,26 @@ export class AppComponent {
     this.loadProblems({ first: 0, rows: 10 });
   }
 
-  toggleSortOrder() {
-    // Toggle the sorting order when the button is clicked
-    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+  toggleSortOrder(column: string) {
+    if (column === 'id') {
+      this.sortOrderId = this.sortOrderId === 'asc' ? 'desc' : 'asc';
+      this.sortOrderTitle = '';
+    } else if (column === 'title') {
+      this.sortOrderTitle = this.sortOrderTitle === 'asc' ? 'desc' : 'asc';
+      this.sortOrderId = '';
+    }
+
     this.loadProblems({ first: 0, rows: 10 });
   }
 
-  getRotationAngle(): string {
-    return this.sortOrder === 'asc' ? 'rotate(-90deg)' : 'rotate(90deg)';
+  getRotationAngle(column: string): string {
+    if (
+      (column === 'id' && this.sortOrderId === 'asc') ||
+      (column === 'title' && this.sortOrderTitle === 'asc')
+    ) {
+      return 'rotate(-90deg)';
+    } else {
+      return 'rotate(90deg)';
+    }
   }
 }
