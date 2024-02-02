@@ -12,8 +12,35 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 10%">Id</th>
-        <th style="width: 24%">Title</th>
+        <th style="width: 10%"></th>
+        <th style="width: 24%">
+          <input
+            type="text"
+            placeholder="Title search..."
+            (input)="titleSearch($event)"
+          />
+        </th>
+        <th style="width: 26%"></th>
+        <th style="width: 16%"></th>
+        <th style="width: 10%"></th>
+        <th style="width: 14%"></th>
+      </tr>
+      <tr>
+        <th style="width: 10%">
+          <button (click)="toggleSortOrder()">
+            <span>Id</span
+            ><i
+              class="fa-solid fa-chevron-right myIcon myIdIcon"
+              [style.transform]="getRotationAngle()"
+            ></i>
+          </button>
+        </th>
+        <th style="width: 24%">
+          <button>
+            <span>Title</span
+            ><i class="fa-solid fa-chevron-right myIcon myTitleIcon"></i>
+          </button>
+        </th>
         <th style="width: 26%">Tags</th>
         <th style="width: 16%">Difficulty</th>
         <th style="width: 10%">Rating</th>
