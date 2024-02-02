@@ -23,6 +23,30 @@ th button {
   cursor: pointer;
 }
 
+.select-container {
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  width: 80px;
+}
+
+.select-box {
+  border: none;
+  appearance: none;
+  padding: 0 30px 0 15px;
+  width: 100%;
+  background-color: #3b82f6;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+select option {
+  padding: 5px;
+}
+
 .myIcon {
   transform: rotate(-90deg);
   padding: 10px 5px;
@@ -45,4 +69,14 @@ th button {
 
 .attemptsCount {
   color: #00cfe8 !important;
+}
+
+.footer {
+  background-color: #f9fafb;
+  padding: 30px 0;
+  margin-top: 10px;
+}
+
+.footer p {
+  text-align: center;
 }

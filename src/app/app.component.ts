@@ -32,7 +32,7 @@ export class AppComponent {
     this.loadProblems({ first: 0, rows: 10 });
   }
 
-  loadProblems(event: LazyLoadEvent) {
+  loadProblems(event: LazyLoadEvent, hasChecker: string = 'all') {
     this.pageNumber =
       event.first === 0 ? 1 : (event.first ?? 81) / (event.rows ?? 81) + 1;
     let ordering = '';
@@ -53,7 +53,8 @@ export class AppComponent {
         this.pageNumber,
         event.rows ?? 81,
         lowercaseTitle,
-        ordering
+        ordering,
+        hasChecker
       ).subscribe((response: any) => {
         this.totalData = response.total;
         this.data$ = of(response.data);
@@ -64,7 +65,8 @@ export class AppComponent {
         this.pageNumber,
         event.rows ?? 81,
         undefined,
-        ordering
+        ordering,
+        hasChecker
       ).subscribe((response: any) => {
         this.totalData = response.total;
         this.data$ = of(response.data);
@@ -73,7 +75,13 @@ export class AppComponent {
     }
   }
 
-  getData(page: number, page_size: number, title?: string, ordering?: string) {
+  getData(
+    page: number,
+    page_size: number,
+    title?: string,
+    ordering?: string,
+    hasChecker?: string
+  ) {
     const params: any = {
       page: page.toString(),
       page_size: page_size.toString(),
@@ -85,6 +93,10 @@ export class AppComponent {
 
     if (ordering) {
       params.ordering = ordering;
+    }
+
+    if (hasChecker && hasChecker !== 'all') {
+      params.has_checker = hasChecker === 'yes';
     }
 
     return this.http.get('https://kep.uz/api/problems', { params: params });
@@ -117,5 +129,10 @@ export class AppComponent {
     } else {
       return 'rotate(90deg)';
     }
+  }
+
+  onCheckerChange(event: Event) {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    this.loadProblems({ first: 0, rows: 10 }, selectedValue);
   }
 }
