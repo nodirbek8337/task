@@ -1,0 +1,57 @@
+<div class="card" *ngIf="{ vm: data$ | async } as data">
+  <p-table
+    #dt1
+    [value]="data.vm ?? []"
+    [paginator]="true"
+    [totalRecords]="totalData"
+    [rows]="10"
+    [lazy]="true"
+    (onLazyLoad)="loadProblems($any($event))"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [globalFilterFields]="['title', 'difficultyTitle']"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">Id</th>
+        <th style="width: 24%">Title</th>
+        <th style="width: 26%">Tags</th>
+        <th style="width: 16%">Difficulty</th>
+        <th style="width: 10%">Rating</th>
+        <th style="width: 14%">Attempts</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+      <tr>
+        <td>{{ data.id }}</td>
+        <td>{{ data.title }}</td>
+        <td>
+          <div class="tags-content">
+            <div *ngFor="let tag of data.tags">
+              <p-badge [value]="tag.name"> </p-badge>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p-badge
+            [value]="data.difficultyTitle"
+            [severity]="difficultyColors[data.difficulty - 1]"
+          >
+          </p-badge>
+        </td>
+        <td>
+          <div class="likesCount">
+            <i class="fa-regular fa-thumbs-up"></i>{{ data.likesCount }}
+          </div>
+          <div class="likesCount">
+            <i class="fa-regular fa-thumbs-down"></i>{{ data.dislikesCount }}
+          </div>
+        </td>
+        <td>
+          <span class="solved">{{ data.solved }}</span> /
+          <span class="attemptsCount">{{ data.attemptsCount }}</span>
+        </td>
+      </tr>
+    </ng-template>
+    <div class="flex-auto"></div>
+  </p-table>
+</div>

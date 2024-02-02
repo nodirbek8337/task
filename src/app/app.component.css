@@ -1,0 +1,17 @@
+.tags-content {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
+
+.likesCount i {
+  padding-right: 5px;
+}
+
+.solved {
+  color: #28c76f !important;
+}
+
+.attemptsCount {
+  color: #00cfe8 !important;
+}
